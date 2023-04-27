@@ -52,3 +52,18 @@ class ReviewDataset(Dataset):
             output['review_text'] = review
 
         return output
+    
+pre_trained_model_ckpt = 'bert-base-uncased'
+tokenizer = BertTokenizer.from_pretrained(pre_trained_model_ckpt)
+
+collator = DataCollatorWithPadding(tokenizer=tokenizer, padding = 'longest' )
+
+def create_data_loader(df, tokenizer, max_len = MAX_LEN, batch_size = BATCH_SIZE, include_raw_text = False ):
+    ds = ReviewDataset(
+        reviews=df.text.to_list(),
+        targets = df.stars.to_list(),
+        tokenizer=tokenizer,
+        max_len=max_len,
+        include_raw_text=include_raw_text
+    )
+    return DataLoader(ds, batch_size=batch_size, collate_fn=collator )
