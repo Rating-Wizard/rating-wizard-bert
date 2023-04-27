@@ -23,7 +23,10 @@ pre_trained_model_ckpt = 'bert-base-uncased'
 # Model Class
 class SentimentClassifier(nn.Module):
     def __init__(self, n_classes):
-        pass
+        super(SentimentClassifier, self).__init__()
+        self.bert = BertModel.from_pretrained(pre_trained_model_ckpt,return_dict=False)
+        self.drop = nn.Dropout(p = 0.3)
+        self.out = nn.Linear(self.bert.config.hidden_size, n_classes)
 
     def forward(self, input_ids, attention_mask):
         pass
