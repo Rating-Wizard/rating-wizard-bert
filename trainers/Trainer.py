@@ -42,6 +42,26 @@ def train_model(model, data_loader, loss_fn, optimizer, device, scheduler, n_exa
     return correct_predictions/n_examples, np.mean(losses)
 ''' clip_grad_norm - We tackle the problem of exploding and vanishing gradients By gradient clipping '''
 
+def eval_model(model, data_loader, loss_fn, device, n_examples):
+    model = model.eval()
+    losses = []
+    correct_predictions = 0
+
+    with torch.no_grad():
+        for d in data_loader:
+            input_ids = d["input_ids"].to(device)
+            attention_mask = d["attention_mask"].to(device)
+            targets = d["targets"].to(device)
+
+            outputs = model(input_ids=input_ids, attention_mask=attention_mask)
+
+            _,preds = torch.max(outputs, dim = 1)
+
+            loss = loss_fn(outputs, targets.detach())
+            correct_predictions += torch.sum(preds == targets).cpu()
+            losses.append(loss.item())
+    return correct_predictions/n_examples, np.mean(losses)
+
 def get_predictions(model, data_loader):
     model = model.eval()
     review_texts = []
