@@ -21,7 +21,7 @@ def train_model(model, data_loader, loss_fn, optimizer, device, scheduler, n_exa
     correct_predictions = 0
 
     for d in data_loader:
-        input_ids = d["input_ids"].to(device)
+        input_ids = d["user_id"].to(device)
         attention_mask = d["attention_mask"].to(device)
         targets = d["targets"].to(device)
 
@@ -51,8 +51,8 @@ def get_predictions(model, data_loader):
 
     with torch.no_grad():
         for d in data_loader:
-            texts = d["review_text"]
-            input_ids = d["input_ids"].to(device)
+            texts = d["text"]
+            input_ids = d["user_id"].to(device)
             attention_mask = d["attention_mask"].to(device)
             targets = d["targets"].to(device)
             outputs = model(input_ids = input_ids, attention_mask = attention_mask)

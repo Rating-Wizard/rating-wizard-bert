@@ -44,12 +44,12 @@ class ReviewDataset(Dataset):
             return_tensors = 'pt',)
 
         output = {
-            'input_ids': encoding['input_ids'].flatten(),
+            'user_id': encoding['user_id'].flatten(),
             'attention_mask': encoding['attention_mask'].flatten(),
             'targets': torch.tensor(target, dtype=torch.long)
         }
         if self.include_raw_text:
-            output['review_text'] = review
+            output['text'] = review
 
         return output
     
